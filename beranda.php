@@ -9,6 +9,10 @@ if(isset($_SESSION['login'])) {
 	<body>
 		<h1> Data Warga</h1>
 		<h3><a href="tambah.php">Tambah Data</a></h3>
+		<form action="" method="post"> 
+		Search: <input type="text" name="cari" />
+		<input type="submit" value="Submit" /> 
+		</form> 
 		<table>
 			<tr>
 				<th>No</th>
@@ -22,27 +26,53 @@ if(isset($_SESSION['login'])) {
 			</tr>
 			<?php
 			include 'koneksi.php';
-			$sql = mysqli_query($connect, "SELECT * FROM data_warga ORDER BY nama DESC");
-			$no = 1;
-			while($row = mysqli_fetch_array($sql)) {
-				echo "
-					<tr>
-						<td>".$no++."</td>
-						<td>".$row['nik']."</td>
-						<td>".$row['no_kk']."</td>
-						<td>".$row['nama']."</td>
-						<td>".date("d F Y", strtotime($row['tanggal_lahir']))."</td>
-						<td>".$row['jenis_kelamin']."</td>
-						<td>".$row['agama']."</td>
-						<td>
-							<a href='edit.php?ID=$row[id]'> Edit 
-							</a>
-							-
-							<a href='hapus.php?ID=$row[id]'> Hapus
-							</a>
-						</td>
-					</tr>
-				";
+			if (!empty($_POST['cari'])) {
+				$cari = $_POST['cari'];
+				$sql = mysqli_query($connect, "SELECT * FROM data_warga WHERE nama LIKE '%".$cari."%'");
+				$no = 1;
+				while($row = mysqli_fetch_array($sql)) {
+					echo "
+						<tr>
+							<td>".$no++."</td>
+							<td>".$row['nik']."</td>
+							<td>".$row['no_kk']."</td>
+							<td>".$row['nama']."</td>
+							<td>".date("d F Y", strtotime($row['tanggal_lahir']))."</td>
+							<td>".$row['jenis_kelamin']."</td>
+							<td>".$row['agama']."</td>
+							<td>
+								<a href='edit.php?ID=$row[id]'> Edit 
+								</a>
+								-
+								<a href='hapus.php?ID=$row[id]'> Hapus
+								</a>
+							</td>
+						</tr>
+					";
+				}
+			} else {
+				$sql = mysqli_query($connect, "SELECT * FROM data_warga ORDER BY nama DESC");
+				$no = 1;
+				while($row = mysqli_fetch_array($sql)) {
+					echo "
+						<tr>
+							<td>".$no++."</td>
+							<td>".$row['nik']."</td>
+							<td>".$row['no_kk']."</td>
+							<td>".$row['nama']."</td>
+							<td>".date("d F Y", strtotime($row['tanggal_lahir']))."</td>
+							<td>".$row['jenis_kelamin']."</td>
+							<td>".$row['agama']."</td>
+							<td>
+								<a href='edit.php?ID=$row[id]'> Edit 
+								</a>
+								-
+								<a href='hapus.php?ID=$row[id]'> Hapus
+								</a>
+							</td>
+						</tr>
+					";
+				}
 			}
 			?>
 		</table>
